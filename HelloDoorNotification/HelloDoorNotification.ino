@@ -124,11 +124,13 @@ static void oledSetup()
 void setup()
 {
   oledSetup();
+
   
     //Serial.begin(115200);
     //delay(100);
 
 printText("Booting");
+        setupWifi();
 
     print_wakeup_reason();
 
@@ -139,16 +141,14 @@ printText("Booting");
     Serial.println(String("New button state: ") + newButtonState);
 
     printText(String("Button states (old/new): ") + String(buttonState) + " " + String(newButtonState));
+delay(1000);
 
-    if (newButtonState != buttonState)
-    {
       buttonState = newButtonState;
 
-      setupWifi();
-      sendButtonStatus(buttonState);
-    }
 
-printText("Status sent, sleeping");
+      sendButtonStatus(buttonState);
+      printText("Status sent, sleeping");
+
 delay(1000);
 
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_0, !buttonState);
