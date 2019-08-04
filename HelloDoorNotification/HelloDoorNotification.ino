@@ -60,7 +60,7 @@ static void setupWifi()
     delay(500);
 }
 
-static void sendButtonStatus()
+static void sendButtonStatus(const int buttonStatus)
 {
     Serial.print("Connecting to ");
     Serial.println(host);
@@ -75,7 +75,9 @@ static void sendButtonStatus()
         return;
     }
 
-    String jsonObject = String("{\"value1\":\"") + buttonState + "\"}";
+    const char* const status = buttonStatus ? "Unlocked" : "Locked";
+
+    String jsonObject = String("{\"value1\":\"") + status + "\"}";
 
     client.println(String("POST ") + resource + " HTTP/1.1");
     client.println(String("Host: ") + host);
@@ -119,7 +121,7 @@ void setup()
       buttonState = newButtonState;
 
       setupWifi();
-      sendButtonStatus();
+      sendButtonStatus(buttonState);
     }
 
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_0, !buttonState);
