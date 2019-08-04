@@ -8,6 +8,8 @@
 #include <WiFi.h>
 #include <WiFiMulti.h>
 #include <pins_arduino.h>
+#include "Arduino.h"
+#include "heltec.h"
 
 #include "credentials.h"
 
@@ -103,10 +105,30 @@ static void sendButtonStatus(const int buttonStatus)
     client.stop();
 }
 
+static void printText(const String text)
+{
+  Heltec.display->clear();
+
+  Heltec.display->drawString(0, 0, text);
+  Heltec.display->display();
+}
+
+static void oledSetup()
+{
+    Heltec.begin(true /*DisplayEnable Enable*/, false /*LoRa Disable*/, true /*Serial Enable*/);
+  Heltec.display->flipScreenVertically();
+  Heltec.display->setFont(ArialMT_Plain_10);
+    Heltec.display->setTextAlignment(TEXT_ALIGN_LEFT);
+}
+
 void setup()
 {
-    Serial.begin(115200);
-    delay(100);
+  oledSetup();
+  
+    //Serial.begin(115200);
+    //delay(100);
+
+printText("Booting");
 
     print_wakeup_reason();
 
@@ -116,6 +138,8 @@ void setup()
     Serial.println(String("Button state: ") + buttonState);
     Serial.println(String("New button state: ") + newButtonState);
 
+    printText(String("Button states (old/new): ") + String(buttonState) + " " + String(newButtonState));
+
     if (newButtonState != buttonState)
     {
       buttonState = newButtonState;
@@ -123,6 +147,9 @@ void setup()
       setupWifi();
       sendButtonStatus(buttonState);
     }
+
+printText("Status sent, sleeping");
+delay(1000);
 
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_0, !buttonState);
 
