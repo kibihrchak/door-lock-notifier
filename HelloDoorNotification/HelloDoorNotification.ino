@@ -7,13 +7,10 @@
 
 #include <pins_arduino.h>
 #include <WiFi.h>
-#include <WiFiMulti.h>
 #include <Arduino.h>
 #include <heltec.h>
 
 #include "credentials.h"
-
-WiFiMulti wiFiMulti;
 
 static const uint16_t port = 80;
 static const char *const host = "maker.ifttt.com";
@@ -55,13 +52,14 @@ void print_wakeup_reason()
 
 static void setupWifi()
 {
-  wiFiMulti.addAP(ssid, pass);
+
+  WiFi.begin(ssid, pass);
 
   Serial.println();
   Serial.println();
   Serial.print("Waiting for WiFi... ");
 
-  while (wiFiMulti.run() != WL_CONNECTED)
+  while (WiFi.status() != WL_CONNECTED)
   {
     Serial.print(".");
     delay(500);
