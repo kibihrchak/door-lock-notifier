@@ -1,0 +1,7 @@
+{
+    "board": "esp32:esp32:heltec_wifi_lora_32",
+    "configuration": "PSRAM=disabled,PartitionScheme=default,CPUFreq=80,FlashMode=qio,FlashFreq=40,FlashSize=4M,UploadSpeed=921600,DebugLevel=none",
+    "output": "./build",
+    "sketch": "HelloDoorNotification/HelloDoorNotification.ino",
+    "port": "COM3"
+}
